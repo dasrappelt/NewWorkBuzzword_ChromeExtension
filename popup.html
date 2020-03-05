@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>New Work Buzzwords</title>
+  </head>
+  <body>
+    <div class="div-header">
+      <h1><span class="headline" id="headline">New Work Buzzwords ✌️</span></h1>
+    </div>
+    <div class="div-result" id="div-result">
+      <span class="result-amount" id="result-amount">0</span>
+      <h3 class="result-topwords-headline" id="result-topwords-headline">
+        Buzzwords <span id="total_amount"></span>
+      </h3>
+      <span
+        class="result-topwords"
+        id="result-topwords"
+        style="height: 85px;overflow: scroll !important;"
+        >click highlight ✊ to see the buzzwords</span
+      >
+      <!-- <div class="div-link">
+        <a
+          class="link-addwords"
+          href="https://twitter.com/intent/tweet?text=Add%20your%20text%20here&hashtags=newworkbuzzwords&via=dasrappelt"
+          target="_blank"
+          data-size="large"
+        >
+          submit more new work buzzwords</a
+        >
+      </div> -->
+    </div>
+
+    <div class="div-button">
+      <button class="button-highlight" id="highlight">Highlight ✊</button>
+      <div class="morph_text" id="morph_text">
+        <span class="mark">Highlighting...</span>
+      </div>
+    </div>
+
+    <div class="loading_frame" id="loading_frame">
+      <div class="morph"></div>
+    </div>
+    <div id="wow">
+      <img class="wow-gif" id="wow-gif" src="/Assets/giphy.gif" />
+      <img class="nice-gif" id="nice-gif" src="/Assets/nice.gif" />
+    </div>
+
+    <script src="popup.js" charset="utf-8"></script>
+  </body>
+</html>
