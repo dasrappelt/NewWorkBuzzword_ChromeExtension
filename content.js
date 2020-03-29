@@ -1,12 +1,6 @@
 function keywordsHighlighter(remove) {
   var occurrences = 0;
   var keyword_occurrences = [];
-  // var scrollingElement = document.scrollingElement || document.body;
-  // scrollingElement.scrollTop = scrollingElement.scrollHeight;
-  // setTimeout(function() {
-  //   var scrollingElement = document.scrollingElement || document.body;
-  //   scrollingElement.scrollTop = 0;
-  // }, 3);
 
   // Based on "highlight: JavaScript text higlighting jQuery plugin" by Johann Burkard.
   // http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html
@@ -77,6 +71,18 @@ function keywordsHighlighter(remove) {
       return /\S/.test(txt);
     }).length;
 
+  var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
+  xmlhttp.open("POST", "https://api.leavinghierarchies.org/insert.php", true);
+  xmlhttp.setRequestHeader("Content-Type", "application/json");
+  xmlhttp.send(
+    JSON.stringify({
+      domain: location.href,
+      words: occurrences,
+      keywords: keyword_occurrences.toString(),
+      total_words: total_number_words
+    })
+  );
+
   chrome.runtime.sendMessage({
     message: "showOccurrences",
     occurrences: occurrences,
@@ -84,8 +90,6 @@ function keywordsHighlighter(remove) {
     total_number_words: total_number_words
   });
 }
-
-console.log(window.location.href);
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   keywordsHighlighter(false);

@@ -23,7 +23,7 @@ document.addEventListener(
     function onclick() {
       document.getElementById("loading_frame").style.display = "block";
       document.getElementById("morph_text").style.display = "flex";
-      document.getElementById("div-result").style.display = "none";
+      document.getElementById("div-start").style.display = "none";
       document.getElementById("highlight").style.display = "none";
       chrome.tabs.query({ currentWindow: true, active: true }, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, "getOccurrences");
