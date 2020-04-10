@@ -1,14 +1,14 @@
 document.addEventListener(
   "DOMContentLoaded",
 
-  function() {
+  function () {
     function animateValue(id, start, end, duration) {
       var range = end - start;
       var current = start;
       var increment = end > start ? 1 : -1;
       var stepTime = Math.abs(Math.floor(duration / range));
       var obj = document.getElementById(id);
-      var timer = setInterval(function() {
+      var timer = setInterval(function () {
         current += increment;
         obj.innerHTML = current;
         if (current == end) {
@@ -25,12 +25,12 @@ document.addEventListener(
       document.getElementById("morph_text").style.display = "flex";
       document.getElementById("div-start").style.display = "none";
       document.getElementById("highlight").style.display = "none";
-      chrome.tabs.query({ currentWindow: true, active: true }, function(tabs) {
+      chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, "getOccurrences");
       });
     }
     function setCount(occurrences, keyword_occurrences, total_number_words) {
-      setTimeout(function() {
+      setTimeout(function () {
         document.getElementById("loading_frame").style.display = "none";
         document.getElementById("div-result").style.display = "flex";
         document.getElementById("headline").classList.add("mark-once");
@@ -52,16 +52,13 @@ document.addEventListener(
           );
         }
 
-        // document.getElementById("highlight").innerHTML = "Again";
         document.getElementById("morph_text").style.display = "none";
-        // document.getElementById("result-amount").innerHTML = String(
-        //   occurrences
-        // );
+
         animateValue("result-amount", 0, occurrences, 5000);
-      }, 4000);
+      }, 2000);
     }
 
-    chrome.runtime.onMessage.addListener(function(request) {
+    chrome.runtime.onMessage.addListener(function (request) {
       if ("showOccurrences" == request.message) {
         var occurrences = request.occurrences;
         var keyword_occurrences = request.keyword_occurrences;

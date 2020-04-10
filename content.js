@@ -14,7 +14,7 @@ function keywordsHighlighter(remove) {
     span.style.backgroundColor = "#fee603";
 
     var highlighted = node.splitText(pos);
-    /*var afterHighlighted = */ highlighted.splitText(keyword.length);
+    highlighted.splitText(keyword.length);
     var highlightedClone = highlighted.cloneNode(true);
 
     span.appendChild(highlightedClone);
@@ -61,42 +61,65 @@ function keywordsHighlighter(remove) {
   if (remove) {
     removeHighlights(document.body);
   }
-  var buzzwords =
-    "New Work, NewWork, Scrum, Design Thinking, Purpose, Agilität, Agil, Obstkorb, gesellschaftlicher Mehrwert, Jobsharing, New Leadership, menschenzentriert, digital, menschzentriert, lego, serious play, tischtennis, table tennis, tischkicker, yolo, kultur, culture, cultural, work-life-balance, ai, identität, wert, vuca, change, enable, enablement, potential, design, mindset, big data, freiheit, freeedom, performance, arbeit 4.0, digitalisierung, management 3.0, lernende organisation, netzwerkorganisation, schwarm, bällebad, lean, bottom up";
-  var keywords = buzzwords.split(",");
-  addHighlights(document.body, keywords);
+
+  function getkeywords(buzzwords) {
+    var buzzwordslen = buzzwords.length;
+    for (var i = 0; i < buzzwordslen; i++) {
+      keywords.push(buzzwords[i].name);
+    }
+    console.log(keywords);
+    addHighlights(document.body, keywords);
+
+    var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
+    xmlhttp.open("POST", "https://api.leavinghierarchies.org/insert.php", true);
+    xmlhttp.setRequestHeader("Content-Type", "application/json");
+    xmlhttp.send(
+      JSON.stringify({
+        domain: location.href,
+        words: occurrences,
+        keywords: keyword_occurrences.toString(),
+        total_words: total_number_words,
+      })
+    );
+
+    chrome.runtime.sendMessage({
+      message: "showOccurrences",
+      occurrences: occurrences,
+      keyword_occurrences: keyword_occurrences,
+      total_number_words: total_number_words,
+    });
+  }
+
+  var buzzwords = [];
+  var keywords = [];
+  var xhttp = new XMLHttpRequest(); // new HttpRequest instance
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      // Typical action to be performed when the document is ready:
+      buzzwords = JSON.parse(xhttp.responseText);
+      getkeywords(buzzwords);
+    }
+  };
+  xhttp.open("GET", "https://api.leavinghierarchies.org/read.php", true);
+  xhttp.send();
+
+  // var buzzwords =
+  //   "New Work, NewWork, Scrum, Design Thinking, Purpose, Agilität, Agil, Obstkorb, gesellschaftlicher Mehrwert, Jobsharing, New Leadership, menschenzentriert, digital, menschzentriert, lego, serious play, tischtennis, table tennis, tischkicker, yolo, kultur, culture, cultural, work-life-balance, ai, identität, wert, vuca, change, enable, enablement, potential, design, mindset, big data, freiheit, freeedom, performance, arbeit 4.0, digitalisierung, management 3.0, lernende organisation, netzwerkorganisation, schwarm, bällebad, lean, bottom up";
+  // var keywords = buzzwords.split(",");
+
   var total_number_words = document.body.innerText
     .split(/\s/)
-    .filter(function(txt) {
+    .filter(function (txt) {
       return /\S/.test(txt);
     }).length;
-
-  var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
-  xmlhttp.open("POST", "https://api.leavinghierarchies.org/insert.php", true);
-  xmlhttp.setRequestHeader("Content-Type", "application/json");
-  xmlhttp.send(
-    JSON.stringify({
-      domain: location.href,
-      words: occurrences,
-      keywords: keyword_occurrences.toString(),
-      total_words: total_number_words
-    })
-  );
-
-  chrome.runtime.sendMessage({
-    message: "showOccurrences",
-    occurrences: occurrences,
-    keyword_occurrences: keyword_occurrences,
-    total_number_words: total_number_words
-  });
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   keywordsHighlighter(false);
 
-  console.log(
-    document.body.innerText.split(/\s/).filter(function(txt) {
-      return /\S/.test(txt);
-    })
-  );
+  // console.log(
+  //   document.body.innerText.split(/\s/).filter(function (txt) {
+  //     return /\S/.test(txt);
+  //   })
+  // );
 });
